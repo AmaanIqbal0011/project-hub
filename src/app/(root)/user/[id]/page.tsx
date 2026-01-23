@@ -60,7 +60,7 @@ const page = async ({ params }: { params: Promise<{ id: string }> }) => {
           {/* Header */}
           <div className="flex items-center justify-between">
             <h3 className="text-2xl font-bold tracking-tight text-black dark:text-white">
-              {session?.id === id ? "Your Projects" : "All Projects"}
+              {session?.user?.id === id ? "Your Projects" : "All Projects"}
             </h3>
           </div>
 

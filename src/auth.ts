@@ -17,7 +17,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       profile : {id , login, bio}
     }: {
   user: AdapterUser | User
-  profile?: Profile | GitHubProfile
+  profile?: Profile | GitHubProfile 
 }) {
       const existingUser = await client.withConfig({useCdn : false}).fetch(AUTHOR_BY_GITHUB_ID_QUERY, {id});
 
