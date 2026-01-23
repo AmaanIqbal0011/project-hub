@@ -3,9 +3,7 @@ import GitHub from "next-auth/providers/github"
 import { client } from "./sanity/lib/client"
 import { AUTHOR_BY_GITHUB_ID_QUERY } from "./sanity/lib/queries"
 import { writeClient } from "./sanity/lib/write-client"
-import type { AdapterUser } from "next-auth/adapters"
-import type { Profile, User } from "next-auth"
-import type { GitHubProfile } from "next-auth/providers/github"
+
  
 export const { handlers, auth, signIn, signOut } = NextAuth({
   providers: [GitHub],
@@ -13,12 +11,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
     async signIn(
       {
-      user : {name, email, image},
-      profile : {id , login, bio}
-    }: {
-  user: AdapterUser | User
-  profile?: Profile | GitHubProfile 
-}) {
+      user,
+      profile,
+    }
+    ) {
+      if(!profile) return false;
+
+      const { id, login, bio } = profile as any;
+  const { name, email, image } = user;
       const existingUser = await client.withConfig({useCdn : false}).fetch(AUTHOR_BY_GITHUB_ID_QUERY, {id});
 
       if(!existingUser){
