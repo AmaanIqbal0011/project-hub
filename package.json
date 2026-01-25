@@ -13,6 +13,7 @@
     "@radix-ui/react-toast": "^1.2.15",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.22.0",
+    "@sentry/nextjs": "^10.36.0",
     "@tailwindcss/typography": "github:tailwindcss/typography",
     "@uiw/react-md-editor": "^4.0.11",
     "class-variance-authority": "^0.7.1",
