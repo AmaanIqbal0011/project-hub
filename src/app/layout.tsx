@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import 'easymde/dist/easymde.min.css'
-// import { Toaster } from "@/components/ui/toaster";
-// import { Analytics } from "@vercel/analytics/react"
+import { Toaster } from "@/components/ui/sonner"
 
 
 export const metadata: Metadata = {
@@ -20,6 +19,7 @@ export default function RootLayout({
       <body>
       
         {children}
+         <Toaster />
       </body>
     </html>
   );

@@ -59,7 +59,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
         {/* Author + Category */}
         <div className="mb-10 flex flex-wrap items-center justify-between gap-6">
           <Link
-            href={`/user/${post.author._id}`}
+            href={`/user/${post?.author?.id}`}
             className="flex items-center gap-4"
           >
           {post.author?.image && (
@@ -74,10 +74,10 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
             <div>
               <p className="text-lg font-semibold text-gray-900">
-                {post.author.name}
+                {post?.author?.name}
               </p>
               <p className="text-sm text-gray-500">
-                @{post.author.username}
+                @{post?.author?.username}
               </p>
             </div>
           </Link>

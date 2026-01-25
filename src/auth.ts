@@ -48,7 +48,9 @@ async jwt({token, account, profile}){
 
 
 async session({session, token}) {
-    Object.assign(session, {id :token.id});
+   if (session.user) {
+      session.user.id = token.id as string; // 👈 correct place
+    }
     return session;
 }
 

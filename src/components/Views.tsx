@@ -21,7 +21,7 @@ const Views = async ({ id }: { id: string }) => {
 
         {/* Count */}
         <span className="text-sm font-semibold tracking-wide">
-          {views.toLocaleString()}
+          {views?.toLocaleString()}
         </span>
 
         {/* Label (hidden on mobile) */}
