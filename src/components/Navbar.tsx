@@ -6,6 +6,7 @@ interface NavBarProps {
   session?: {
     user?: {
       name?: string | null;
+      id:string
     };
     id?: string;
   } | null;
@@ -43,7 +44,7 @@ const NavBar = async () => {
 
               {/* User Profile */}
               <Link
-                href={`/user/${session.id}`}
+                href={`/user/${session.user.id}`}
                 className="flex items-center gap-2 rounded-lg px-3 py-2 transition hover:bg-gray-100"
               >
                 <div className="flex h-8 w-8 items-center justify-center rounded-full bg-black text-sm font-semibold text-white">
