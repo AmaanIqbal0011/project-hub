@@ -22,6 +22,17 @@ const [post , {select : editorPost}] = await Promise.all([
 
 ]);
 
+ const {
+    _id,
+    title,
+    description,
+    image,
+    author,
+    category,
+    views,
+  } = post;
+
+
   if (!post) return notFound();
 
   const parsedContent = md.render(post?.details || "");
@@ -65,7 +76,7 @@ const [post , {select : editorPost}] = await Promise.all([
         {/* Author + Category */}
         <div className="mb-10 flex flex-wrap items-center justify-between gap-6">
           <Link
-            href={`/user/${post?.author?.id}`}
+            href={`/user/${author?._id}`}
             className="flex items-center gap-4"
           >
           {post.author?.image && (
