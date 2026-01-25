@@ -1,6 +1,6 @@
 import { Boxes } from "@/components/ui/background-boxes";
 import { client } from "@/sanity/lib/client";
-import { PROJECT_BY_ID_QUERY } from "@/sanity/lib/queries";
+import { PLAYLIST_BY_SLUG_QUERY, PROJECT_BY_ID_QUERY } from "@/sanity/lib/queries";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -8,6 +8,7 @@ import React, { Suspense } from "react";
 import markdownit from "markdown-it";
 import { formateDate } from "@/lib/utils";
 import Views from "@/components/Views";
+import { ThreeDCardDemo } from "@/components/threeDCard";
 
 const md = markdownit();
 export const experimental_ppr = true;
@@ -15,7 +16,12 @@ export const experimental_ppr = true;
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;
 
-  const post = await client.fetch(PROJECT_BY_ID_QUERY, { id });
+const [post , {select : editorPost}] = await Promise.all([
+  client.fetch(PROJECT_BY_ID_QUERY , {id}),
+  client.fetch(PLAYLIST_BY_SLUG_QUERY , {slug : 'editor-picks'}),
+
+]);
+
   if (!post) return notFound();
 
   const parsedContent = md.render(post?.details || "");
@@ -109,6 +115,37 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
 
         {/* Divider */}
         <hr className="my-16 border-gray-200" />
+
+
+      {editorPost?.length > 0 && (
+  <section className="mx-auto mt-24 max-w-6xl">
+
+    {/* Header */}
+    <div className="mb-12 text-center">
+      <h2 className="text-4xl font-extrabold tracking-tight">
+        ✨ Editor Picks
+      </h2>
+      <p className="mt-3 text-sm text-neutral-500">
+        Hand-picked projects curated by our editors
+      </p>
+
+      {/* Gradient divider */}
+      <div className="mx-auto mt-6 h-[2px] w-24 rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
+    </div>
+
+    {/* Cards */}
+    <ul className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+      {editorPost.map((post: any) => (
+        <li
+          key={post._id}
+          className="transition-all duration-300 hover:-translate-y-2"
+        >
+          <ThreeDCardDemo post={post} />
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
       </section>
 
       {/* ================= VIEWS ================= */}
