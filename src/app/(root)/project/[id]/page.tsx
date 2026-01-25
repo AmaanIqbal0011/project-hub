@@ -140,7 +140,7 @@ const [post , {select : editorPost}] = await Promise.all([
           key={post._id}
           className="transition-all duration-300 hover:-translate-y-2"
         >
-          <ThreeDCardDemo post={post} />
+          <ThreeDCardDemo {...post} post={post} />
         </li>
       ))}
     </ul>
