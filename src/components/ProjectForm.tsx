@@ -19,12 +19,13 @@ const ProjectForm = () => {
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
     try {
       const formValues = {
-        title: formData.get("title") as string,
-        description: formData.get("description") as string,
-        category: formData.get("category") as string,
-        link: formData.get("link") as string,
-        details
-      };
+  title: formData.get("title") as string,
+  description: formData.get("description") as string,
+  category: formData.get("category") as string,
+  link: formData.get("link") as string,
+  vercelLink: formData.get("vercelLink") as string,
+  details
+};
 
       await formSchema.parseAsync(formValues);
       const result = await createProject(prevState, formData, details);
@@ -106,6 +107,17 @@ const ProjectForm = () => {
           />
           {errors.link && <p className="form-error">{errors.link}</p>}
         </div>
+        <div className="space-y-2">
+  <label className="form-label">Vercel Deployment Link (optional)</label>
+  <Input
+    name="vercelLink"
+    placeholder="https://your-project.vercel.app"
+    className="form-input"
+  />
+  {errors.vercelLink && (
+    <p className="form-error">{errors.vercelLink}</p>
+  )}
+</div>
 
         {/* Markdown Editor */}
         <div className="space-y-2" data-color-mode="light">

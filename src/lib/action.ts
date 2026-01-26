@@ -9,7 +9,7 @@ export const createProject = async(state : any, form: FormData, details : string
         error : "Unauthorized", status : 'Error'
     });
 
-    const {title , description, category, link} = Object.fromEntries(
+    const {title , description, category, link,vercelLink} = Object.fromEntries(
         Array.from(form).filter(([key])=> key !== 'details')
     );
 
@@ -20,6 +20,7 @@ export const createProject = async(state : any, form: FormData, details : string
         const project = {
             title,
             description,
+            vercelLink,
             category,
             image : link,
             slug : {
