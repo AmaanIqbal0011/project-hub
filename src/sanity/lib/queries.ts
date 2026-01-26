@@ -14,6 +14,7 @@ export const PROJECT_QUERY = defineQuery(
 _id,
 title,
 slug,
+vercelLink,
 _createdAt,
 author -> {
 _id, name, image, bio, username

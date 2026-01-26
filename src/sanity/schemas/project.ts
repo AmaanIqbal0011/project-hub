@@ -35,6 +35,17 @@ export const project = defineType({
             type : 'string',
             validation : (Rule) => Rule.min(1).max(50).required().error("Please enter a category"),
         }),
+         defineField({
+  name: 'vercelLink',
+  title: 'Vercel Link',
+  type: 'url',
+  validation: (Rule) =>
+    Rule.required()
+      .uri({
+        scheme: ['http', 'https'],
+      })
+      .error('Please enter a valid Vercel link'),
+}),
         defineField({
             name : 'image',
             type : 'url',

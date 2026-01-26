@@ -13,6 +13,7 @@ interface ThreeDCardDemoProps {
     description?: string;
     slug: { current: string };
     image?: string;
+    vercelLink?: string;
     author?: {
       name: string;
       username: string;
@@ -26,15 +27,17 @@ interface ThreeDCardDemoProps {
 }
 
 export function ThreeDCardDemo({ post }: ThreeDCardDemoProps ) {
-  const {
-    _id,
-    title,
-    description,
-    image,
-    author,
-    category,
-    views,
-  } = post;
+ const {
+  _id,
+  title,
+  description,
+  image,
+  author,
+  category,
+  views,
+  vercelLink,
+} = post;
+
 
   return (
     <CardContainer className="inter-var">
@@ -106,20 +109,40 @@ export function ThreeDCardDemo({ post }: ThreeDCardDemoProps ) {
           </CardItem>
 
           {/* CTA */}
-          <CardItem translateZ={30}>
-            <Link
-              href={`/project/${_id}`}
-              className="
-                inline-flex items-center gap-1
-                rounded-lg bg-black px-4 py-2
-                text-xs font-semibold text-white
-                dark:bg-white dark:text-black
-                hover:opacity-90 transition
-              "
-            >
-              View Details →
-            </Link>
-          </CardItem>
+        <CardItem translateZ={30} className="flex items-center gap-2">
+  {/* Details */}
+  <Link
+    href={`/project/${_id}`}
+    className="
+      inline-flex items-center gap-1
+      rounded-lg bg-black px-4 py-2
+      text-xs font-semibold text-white
+      dark:bg-white dark:text-black
+      hover:opacity-90 transition
+    "
+  >
+    Details →
+  </Link>
+
+  {/* Vercel */}
+  {vercelLink && (
+    <Link
+      href={vercelLink}
+      target="_blank"
+      className="
+        inline-flex items-center gap-1
+        rounded-lg border border-neutral-300
+        px-3 py-2 text-xs font-medium
+        text-neutral-700 dark:text-neutral-200
+        hover:bg-neutral-100 dark:hover:bg-white/10
+        transition
+      "
+    >
+      ▲ Live
+    </Link>
+  )}
+</CardItem>
+
         </div>
       </CardBody>
     </CardContainer>
