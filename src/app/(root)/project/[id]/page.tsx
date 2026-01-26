@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { Boxes } from "@/components/ui/background-boxes";
 import { client } from "@/sanity/lib/client";
 import {
@@ -9,13 +10,88 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
 import markdownit from "markdown-it";
-import { formateDate } from "@/lib/utils";
+import { formateDate, getAbsoluteImageUrl } from "@/lib/utils";
 import Views from "@/components/Views";
 import { ThreeDCardDemo } from "@/components/threeDCard";
 import { urlFor } from "@/sanity/lib/sanityImage";
 
 const md = markdownit();
 export const experimental_ppr = true;
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const id = (await params).id;
+
+  const post = await client.fetch(PROJECT_BY_ID_QUERY, { id });
+
+  if (!post) {
+    return {};
+  }
+
+  const { title, description, imageUrl, author, category, _createdAt } = post;
+  const absoluteImageUrl = getAbsoluteImageUrl(imageUrl);
+
+  return {
+    title: `${title} | Project Hub`,
+    description: description || `Learn about ${title} - a featured project on Project Hub built with Next.js and modern web technologies.`,
+    keywords: [
+      'Next.js',
+      'project',
+      category,
+      title,
+      'web development',
+      'open source',
+      author?.name || 'author',
+      'tutorial'
+    ],
+    openGraph: {
+      type: "article",
+      locale: "en_US",
+      url: `https://nextjs-project-hub.vercel.app/project/${id}`,
+      title: `${title} | Project Hub`,
+      description: description || `Learn about ${title} - a featured project on Project Hub built with Next.js and modern web technologies.`,
+      siteName: "Project Hub",
+      authors: [author?.name || 'Unknown Author'],
+      publishedTime: _createdAt,
+      tags: [category, 'Next.js', 'web development', 'open source'],
+      images: absoluteImageUrl ? [
+        {
+          url: absoluteImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ] : [
+        {
+          url: "https://nextjs-project-hub.vercel.app/og-article-default.jpg", // Default image if no project image
+          width: 1200,
+          height: 630,
+          alt: "Default Project Hub Article Image",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${title} | Project Hub`,
+      description: description || `Learn about ${title} - a featured project on Project Hub built with Next.js and modern web technologies.`,
+      images: absoluteImageUrl ? [absoluteImageUrl] : ["https://nextjs-project-hub.vercel.app/twitter-article-default.jpg"],
+      creator: author?.username ? `@${author.username}` : "@projecthub",
+    },
+    alternates: {
+      canonical: `https://nextjs-project-hub.vercel.app/project/${id}`,
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
 
 const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;

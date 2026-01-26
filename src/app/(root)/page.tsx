@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import SearchForm from "@/components/SearchForm";
 import { ThreeDCardDemo } from "@/components/threeDCard";
 import { Boxes } from "@/components/ui/background-boxes";
@@ -6,10 +7,76 @@ import { sanityFetch, SanityLive } from "@/sanity/lib/live";
 import { PROJECT_QUERY } from "@/sanity/lib/queries";
 import { auth } from "@/auth";
 
+export async function generateMetadata({ searchParams }: { searchParams: Promise<{ query?: string }> }): Promise<Metadata> {
+  const query = (await searchParams).query;
+
+  const title = query
+    ? `Search Results for "${query}" | Project Hub`
+    : "Project Hub - Discover & Share Next.js Projects";
+
+  const description = query
+    ? `Discover Next.js projects matching "${query}". Browse real-world examples and find inspiration for your next project.`
+    : "Discover and share amazing Next.js projects. Browse real-world examples, learn from code, and showcase your creations.";
+
+  const keywords = query
+    ? ['Next.js', 'projects', 'development', query, 'web development']
+    : ['Next.js', 'projects', 'development', 'web development', 'open source', 'tutorials'];
+
+  return {
+    title,
+    description,
+    keywords,
+    openGraph: {
+      type: "website",
+      locale: "en_US",
+      url: query
+        ? `https://nextjs-project-hub.vercel.app/?query=${encodeURIComponent(query)}`
+        : "https://nextjs-project-hub.vercel.app/",
+      title,
+      description,
+      siteName: "Project Hub",
+      images: [
+        {
+          url: query
+            ? `https://nextjs-project-hub.vercel.app/api/og?query=${encodeURIComponent(query)}`
+            : "https://nextjs-project-hub.vercel.app/og-image.jpg", // Replace with your actual OG image
+          width: 1200,
+          height: 630,
+          alt: query ? `Search Results for ${query} | Project Hub` : "Project Hub - Discover & Share Next.js Projects",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [query
+        ? `https://nextjs-project-hub.vercel.app/api/og?query=${encodeURIComponent(query)}`
+        : "https://nextjs-project-hub.vercel.app/twitter-image.jpg"], // Replace with your actual Twitter image
+    },
+    alternates: {
+      canonical: query
+        ? `https://nextjs-project-hub.vercel.app/?query=${encodeURIComponent(query)}`
+        : "https://nextjs-project-hub.vercel.app/",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        'max-video-preview': -1,
+        'max-image-preview': 'large',
+        'max-snippet': -1,
+      },
+    },
+  };
+}
+
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams: Promise<{ query: string }>;
+  searchParams: Promise<{ query?: string }>;
 }) {
   const query = (await searchParams).query;
   const params = { search: query || null };
@@ -67,12 +134,12 @@ export default async function HomePage({
             {query? (<h2 className="text-2xl font-semibold text-gray-900">
               Showing results for:{" "}
               <span className="font-medium text-gray-800">
-                “{query}”
+                "{query}"
               </span>
             </h2>) : ( <h2 className="text-2xl font-semibold text-gray-900">
               🔥 Trending Projects
             </h2>) }
-           
+
           </div>
 
           <button className="text-sm font-medium text-indigo-600 hover:underline">
