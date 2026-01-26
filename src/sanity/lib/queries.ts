@@ -33,6 +33,7 @@ export const PROJECT_BY_ID_QUERY = defineQuery(`
   _id,
   title,
   slug,
+  vercelLink,
   _createdAt,
   author -> {
     _id, name, username, image,bio
@@ -107,6 +108,7 @@ export const PLAYLIST_BY_SLUG_QUERY =
     _id,
     _createdAt,
     title,
+    vercelLink,
     slug,
     author->{
       _id,
