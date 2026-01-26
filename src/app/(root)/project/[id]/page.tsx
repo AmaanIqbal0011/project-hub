@@ -187,7 +187,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-indigo-400/20 via-purple-400/20 to-pink-400/20 blur-xl opacity-0 group-hover:opacity-100 transition" />
 
           <div className="relative">
-            <ThreeDCardDemo post={item} />
+            <ThreeDCardDemo {...item}  post={item} />
           </div>
         </li>
       ))}
