@@ -24,7 +24,7 @@ const UserProjects = async ({ id }: { id: string }) => {
     <>
       {projects.map((post: any) => (
         <li key={post._id} className="list-none flex justify-center">
-          <ThreeDCardDemo post={post} />
+          <ThreeDCardDemo {...post} post={post} />
         </li>
       ))}
     </>
