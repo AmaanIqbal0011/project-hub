@@ -45,12 +45,12 @@ export const project = defineType({
         scheme: ['http', 'https'],
       })
       .error('Please enter a valid Vercel link'),
+}),defineField({
+  name: 'image',
+  title: 'Project Image',
+  type: 'image',
+  validation: (Rule) => Rule.required(),
 }),
-        defineField({
-            name : 'image',
-            type : 'url',
-            validation : (Rule) => Rule.required()
-        }),
         defineField({
             name : 'details',
             type : 'markdown',

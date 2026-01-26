@@ -9,15 +9,7 @@ export const formSchema = z.object({
     .url("Invalid Vercel URL")
     .optional()
     .or(z.literal("")),
-    link : z.string().url().refine(async (url)=>{
-        try {
-            const res = await fetch(url, {method: "HEAD"});
-            const contentType = res.headers.get('content-type');
-            return contentType?.startsWith("image/");
-        } catch (error) {
-            return false;
-        }
-    }),
+    image: z.instanceof(File),
     details : z.string().min(10),
   
 

@@ -1,7 +1,7 @@
 import { defineQuery } from "next-sanity";
 
-export const PROJECT_QUERY = defineQuery(
-    `*[
+export const PROJECT_QUERY = defineQuery(`
+*[
   _type == "project" &&
   defined(slug.current) &&
   (
@@ -11,20 +11,24 @@ export const PROJECT_QUERY = defineQuery(
     author->name match $search
   )
 ] | order(views desc) {
-_id,
-title,
-slug,
-vercelLink,
-_createdAt,
-author -> {
-_id, name, image, bio, username
-},
-views,
-description,
-category,
-image
-}`
-);
+  _id,
+  title,
+  slug,
+  vercelLink,
+  _createdAt,
+  author->{
+    _id,
+    name,
+    image,
+    bio,
+    username
+  },
+  views,
+  description,
+  category,
+  "imageUrl": image.asset->url
+}
+`);
 
 
 export const PROJECT_BY_ID_QUERY = defineQuery(`
@@ -41,7 +45,7 @@ export const PROJECT_BY_ID_QUERY = defineQuery(`
   views,
     description,
     category,
-    image,
+    "imageUrl": image.asset->url,
     details,
 }
 
@@ -94,7 +98,8 @@ _id, name, image, bio, username
 views,
 description,
 category,
-image
+"imageUrl": image.asset->url,
+details
 }`
 );
 
@@ -120,7 +125,7 @@ export const PLAYLIST_BY_SLUG_QUERY =
     views,
     description,
     category,
-    image,
+    "imageUrl": image.asset->url,
     details
   }
 }`);

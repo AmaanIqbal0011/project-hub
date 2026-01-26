@@ -12,6 +12,7 @@ import markdownit from "markdown-it";
 import { formateDate } from "@/lib/utils";
 import Views from "@/components/Views";
 import { ThreeDCardDemo } from "@/components/threeDCard";
+import { urlFor } from "@/sanity/lib/sanityImage";
 
 const md = markdownit();
 export const experimental_ppr = true;
@@ -30,7 +31,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
     _id,
     title,
     description,
-    image,
+    imageUrl,
     author,
     category,
     vercelLink,
@@ -39,6 +40,7 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
   } = post;
 
   const parsedContent = md.render(details || "");
+  const imageurl = imageUrl ? urlFor(imageUrl) : undefined;
 
   return (
     <>
@@ -65,10 +67,10 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
       {/* ================= CONTENT ================= */}
       <section className="mx-auto max-w-5xl px-6 py-20">
         {/* Cover */}
-        {image && (
+        {imageUrl && (
           <div className="relative mb-12 overflow-hidden rounded-2xl">
             <Image
-              src={image}
+              src={imageUrl}
               alt={title}
               width={1200}
               height={700}

@@ -2,17 +2,28 @@ import { withSentryConfig } from "@sentry/nextjs";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-
+  reactStrictMode: true,
+   
   images: {
     dangerouslyAllowSVG: true,
-    remotePatterns : [
+    domains: [
+      "cdn.sanity.io",               // for Sanity images
+      "placehold.co",                // placeholders
+      "encrypted-tbn0.gstatic.com", // your external image
+    ],
+     remotePatterns: [
       {
-      protocol: "https",
-      hostname: "*"
-      }
-    ]
-  }
+        protocol: "https",
+        hostname: "*",
+      },
+    ],
+   
+  },
 };
+
+
+
+
 
 export default withSentryConfig(nextConfig, {
   // For all available options, see:

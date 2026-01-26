@@ -83,7 +83,7 @@ export default async function HomePage({
         {/* Content */}
         {posts?.length > 0 ? (
           <ul className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post: any) => (
+            {posts.map((post : any) => (
               <li key={post._id}>
                 <ThreeDCardDemo {...post} post={post}/>
               </li>

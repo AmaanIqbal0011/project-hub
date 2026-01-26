@@ -5,6 +5,8 @@ import { client } from "@/sanity/lib/client";
 import { AUTHOR_BY_ID_QUERY } from "@/sanity/lib/queries";
 import { notFound } from "next/navigation";
 import React, { Suspense } from "react";
+import { urlFor } from "@/sanity/lib/sanityImage";
+
 
 const page = async ({ params }: { params: Promise<{ id: string }> }) => {
   const id = (await params).id;

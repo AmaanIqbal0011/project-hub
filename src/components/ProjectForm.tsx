@@ -18,12 +18,12 @@ const ProjectForm = () => {
 
   const handleFormSubmit = async (prevState: any, formData: FormData) => {
     try {
-      const formValues = {
+const formValues = {
   title: formData.get("title") as string,
   description: formData.get("description") as string,
   category: formData.get("category") as string,
-  link: formData.get("link") as string,
   vercelLink: formData.get("vercelLink") as string,
+  image: formData.get("image") as File,
   details
 };
 
@@ -99,14 +99,18 @@ const ProjectForm = () => {
 
         {/* Image URL */}
         <div className="space-y-2">
-          <label className="form-label">Thumbnail Image URL</label>
-          <Input
-            name="link"
-            placeholder="https://image-url.com/project.png"
-            className="form-input"
-          />
-          {errors.link && <p className="form-error">{errors.link}</p>}
-        </div>
+  <label className="form-label">Project Thumbnail</label>
+
+  <Input
+    type="file"
+    name="image"
+    accept="image/*"
+    className="form-input cursor-pointer"
+  />
+
+  {errors.image && <p className="form-error">{errors.image}</p>}
+</div>
+        {/* Vercel Link */}
         <div className="space-y-2">
   <label className="form-label">Vercel Deployment Link (optional)</label>
   <Input
