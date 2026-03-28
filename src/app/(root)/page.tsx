@@ -4,8 +4,10 @@ import { ThreeDCardDemo } from "@/components/threeDCard";
 import { Boxes } from "@/components/ui/background-boxes";
 import { cn } from "@/lib/utils";
 import { sanityFetch, SanityLive } from "@/sanity/lib/live";
-import { PROJECT_QUERY } from "@/sanity/lib/queries";
+import { PROJECT_QUERY, PLAYLIST_BY_SLUG_QUERY } from "@/sanity/lib/queries";
 import { auth } from "@/auth";
+import { TrendingUp, ArrowRight, Award } from "lucide-react";
+import { EditorPickCard } from "@/components/EditorPickCard";
 
 export async function generateMetadata({ searchParams }: { searchParams: Promise<{ query?: string }> }): Promise<Metadata> {
   const query = (await searchParams).query;
@@ -82,10 +84,12 @@ export default async function HomePage({
   const params = { search: query || null };
   const session = await auth();
 
-  const { data: posts } = await sanityFetch({
-    query: PROJECT_QUERY,
-    params,
-  });
+  const [{ data: posts }, { data: editorPicks }] = await Promise.all([
+    sanityFetch({ query: PROJECT_QUERY, params }),
+    sanityFetch({ query: PLAYLIST_BY_SLUG_QUERY, params: { slug: "editor-picks" } }),
+  ]);
+
+  const editorPickPosts = editorPicks?.select ?? [];
 
   return (
     <>
@@ -126,30 +130,100 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* ================= PROJECTS ================= */}
-      <section className="mx-auto max-w-7xl px-6 py-24">
-        {/* Header */}
-        <div className="mb-12 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            {query? (<h2 className="text-2xl font-semibold text-gray-900">
-              Showing results for:{" "}
-              <span className="font-medium text-gray-800">
-                "{query}"
-              </span>
-            </h2>) : ( <h2 className="text-2xl font-semibold text-gray-900">
-              🔥 Trending Projects
-            </h2>) }
-
+      {/* ================= EDITOR PICKS ================= */}
+      {editorPickPosts.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-16 md:px-6 md:py-24">
+          {/* Section Header */}
+          <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-400 to-orange-500 shadow-lg shadow-amber-500/25">
+                  <Award className="h-4 w-4 text-white" />
+                </div>
+                <span className="rounded-full bg-amber-100 dark:bg-amber-500/10 px-3 py-0.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
+                  Curated
+                </span>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white sm:text-3xl">
+                Editor&apos;s Picks
+              </h2>
+              <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
+                Hand-picked projects by our team for outstanding quality & creativity
+              </p>
+            </div>
           </div>
 
-          <button className="text-sm font-medium text-indigo-600 hover:underline">
+          {/* Featured Layout */}
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-5 lg:gap-8">
+            {/* Featured Card - first item */}
+            <div className="lg:col-span-3">
+              <EditorPickCard post={editorPickPosts[0]} variant="featured" />
+            </div>
+
+            {/* Compact Cards - remaining items */}
+            <div className="flex flex-col gap-4 lg:col-span-2">
+              {editorPickPosts.slice(1, 4).map((post: typeof editorPickPosts[number]) => (
+                <EditorPickCard key={post._id} post={post} variant="compact" />
+              ))}
+            </div>
+          </div>
+
+          {/* Extra picks row (5th onward) */}
+          {editorPickPosts.length > 4 && (
+            <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {editorPickPosts.slice(4, 7).map((post: typeof editorPickPosts[number]) => (
+                <EditorPickCard key={post._id} post={post} variant="compact" />
+              ))}
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Divider */}
+      {editorPickPosts.length > 0 && (
+        <div className="mx-auto max-w-7xl px-4 md:px-6">
+          <div className="h-px bg-gradient-to-r from-transparent via-gray-200 dark:via-white/10 to-transparent" />
+        </div>
+      )}
+
+      {/* ================= PROJECTS ================= */}
+      <section className="mx-auto max-w-7xl px-4 py-20 md:px-6 md:py-28">
+        {/* Header */}
+        <div className="mb-12 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            {query ? (
+              <>
+                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                  Search Results
+                </h2>
+                <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
+                  Showing results for "{query}"
+                </p>
+              </>
+            ) : (
+              <>
+                <div className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-emerald-500 dark:text-emerald-400" />
+                  <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                    Trending Projects
+                  </h2>
+                </div>
+                <p className="mt-1 text-sm text-gray-500 dark:text-neutral-400">
+                  Discover what developers are building
+                </p>
+              </>
+            )}
+          </div>
+
+          <button className="group flex items-center gap-1 text-sm font-medium text-indigo-600 dark:text-indigo-400 transition hover:text-indigo-500 dark:hover:text-indigo-300">
             View all
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
           </button>
         </div>
 
         {/* Content */}
         {posts?.length > 0 ? (
-          <ul className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {posts.map((post : any) => (
               <li key={post._id}>
                 <ThreeDCardDemo {...post} post={post}/>
@@ -157,11 +231,14 @@ export default async function HomePage({
             ))}
           </ul>
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed py-20 text-center">
-            <p className="text-lg font-medium text-gray-700">
+          <div className="flex flex-col items-center justify-center rounded-3xl border border-gray-200 dark:border-white/5 bg-gray-50 dark:bg-white/5 py-20 text-center">
+            <div className="flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-white/5 text-3xl mb-4">
+              🔍
+            </div>
+            <p className="text-lg font-semibold text-gray-900 dark:text-white">
               No projects found
             </p>
-            <p className="mt-2 max-w-sm text-sm text-gray-500">
+            <p className="mt-2 max-w-sm text-sm text-gray-500 dark:text-neutral-400">
               Try a different keyword or clear the search to explore all
               projects.
             </p>

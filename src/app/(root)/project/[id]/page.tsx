@@ -14,6 +14,7 @@ import { formateDate, getAbsoluteImageUrl } from "@/lib/utils";
 import Views from "@/components/Views";
 import { ThreeDCardDemo } from "@/components/threeDCard";
 import { urlFor } from "@/sanity/lib/sanityImage";
+import { Calendar, User, ExternalLink, Share2, Heart } from "lucide-react";
 
 const md = markdownit();
 export const experimental_ppr = true;
@@ -157,26 +158,32 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
         )}
 
         {/* Author + Category + Vercel */}
-        <div className="mb-10 flex flex-wrap items-center justify-between gap-6">
-          <Link href={`/user/${author?._id}`} className="flex items-center gap-4">
-            {author?.image && (
+        <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+          <Link href={`/user/${author?._id}`} className="flex items-center gap-4 group">
+            {author?.image ? (
               <Image
                 src={author.image}
                 alt={author.name || "Author"}
                 width={56}
                 height={56}
-                className="rounded-full object-cover shadow-lg"
+                className="rounded-full object-cover shadow-lg ring-2 ring-white/10 group-hover:ring-indigo-500/50 transition-all"
               />
+            ) : (
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 text-xl font-bold text-white shadow-lg ring-2 ring-white/10">
+                {author?.name?.charAt(0).toUpperCase()}
+              </div>
             )}
 
-            <div>
-              <p className="text-lg font-semibold">{author?.name}</p>
+            <div className="flex flex-col">
+              <p className="text-lg font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                {author?.name}
+              </p>
               <p className="text-sm text-neutral-500">@{author?.username}</p>
             </div>
           </Link>
 
-          <div className="flex items-center gap-3">
-            <span className="rounded-full bg-indigo-50 px-4 py-1.5 text-sm font-medium text-indigo-600">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="rounded-full bg-indigo-100 dark:bg-indigo-500/20 px-4 py-1.5 text-sm font-medium text-indigo-700 dark:text-indigo-300">
               {category}
             </span>
 
@@ -184,14 +191,10 @@ const Page = async ({ params }: { params: Promise<{ id: string }> }) => {
               <Link
                 href={vercelLink}
                 target="_blank"
-                className="
-                  inline-flex items-center gap-1
-                  rounded-full border border-neutral-300
-                  px-4 py-1.5 text-sm font-semibold
-                  hover:bg-neutral-100 transition
-                "
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 dark:border-white/20 bg-white dark:bg-white/5 px-5 py-2 text-sm font-semibold text-gray-900 dark:text-white hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors"
               >
-                ▲ Live on Vercel
+                <ExternalLink className="h-4 w-4" />
+                Live Demo
               </Link>
             )}
           </div>

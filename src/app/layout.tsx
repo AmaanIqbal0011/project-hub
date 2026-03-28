@@ -4,6 +4,7 @@ import 'easymde/dist/easymde.min.css'
 import { Toaster } from "@/components/ui/sonner"
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { ThemeProvider } from "@/components/ThemeProvider"
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://nextjs-project-hub.vercel.app'),
@@ -67,13 +68,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body>
-
-        {children}
-         <Toaster />
-         <Analytics />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <Toaster />
+          <Analytics />
           <SpeedInsights />
+        </ThemeProvider>
       </body>
     </html>
   );
